@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Fretboard Game</string>
+    <string name="permission">Permission</string>
+    <string name="permission_record_audio">The app must be able to use the microphone.</string>
+    <string name="choose">Choose the difficulty</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
+    <string name="ready">Ready</string>
+    <string name="go">Go!</string>
+    <string name="your_score">Your score is</string>
+
+    <string name="username">Username</string>
+    <string name="enter">Enter</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="standard_tuning_val" translatable="false">Standard</string>
+    <string name="open_a_tuning_val" translatable="false">Open A</string>
+    <string name="open_g_tuning_val" translatable="false">Open G</string>
+    <string name="open_d_tuning_val" translatable="false">Open D</string>
+    <string name="drop_d_tuning_val" translatable="false">Drop D</string>
+
+    <string name="pref_tuning_key" translatable="false">pref_tuning</string>
+</resources>

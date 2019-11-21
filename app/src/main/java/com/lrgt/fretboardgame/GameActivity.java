@@ -50,23 +50,7 @@ public class GameActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (Utils.checkPermission(this, Manifest.permission.RECORD_AUDIO)) {
-            new CountDownTimer(4000, 1000) {
-
-                public void onTick(long millisUntilFinished) {
-                    if ((int) millisUntilFinished == 0) {
-                        note.setText(getString(R.string.go));
-                    } else if (millisUntilFinished == 4000) {
-                        note.setText(getString(R.string.ready));
-                    } else {
-                        note.setText(String.format("%d", (millisUntilFinished / 1000)));
-                    }
-                }
-
-                public void onFinish() {
-                    startAudioProcessing();
-                    startNewNote();
-                }
-            }.start();
+            startGame();
         }
     }
 
@@ -117,7 +101,7 @@ public class GameActivity extends AppCompatActivity {
         if (requestCode == PERMISSION_REQUEST_RECORD_AUDIO) {// If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startAudioProcessing();
+                startGame();
             }
         }
     }
@@ -235,20 +219,24 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    private void startGame() {
+        new CountDownTimer(4000, 1000) {
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.action_settings) {
-//            NavUtils.showSettingsActivity(this);
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+            public void onTick(long millisUntilFinished) {
+                if ((int) millisUntilFinished == 0) {
+                    note.setText(getString(R.string.go));
+                } else if (millisUntilFinished == 4000) {
+                    note.setText(getString(R.string.ready));
+                } else {
+                    note.setText(String.format("%d", (millisUntilFinished / 1000)));
+                }
+            }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(MenuActivity menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.main, menu);
-//        return true;
-//    }
+            public void onFinish() {
+                startAudioProcessing();
+                startNewNote();
+            }
+        }.start();
+    }
+
 }

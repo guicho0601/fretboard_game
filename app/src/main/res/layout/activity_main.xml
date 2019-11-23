@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_blue_light"
+            android:textColor="@color/colorInfo"
             android:textIsSelectable="false"
             android:textSize="80sp" />
     </FrameLayout>

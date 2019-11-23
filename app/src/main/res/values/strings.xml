@@ -21,4 +21,7 @@
     <string name="drop_d_tuning_val" translatable="false">Drop D</string>
 
     <string name="pref_tuning_key" translatable="false">pref_tuning</string>
+
+    <string name="fa_times_circle">&#xf057;</string>
+    <string name="fa_check_circle">&#xf058;</string>
 </resources>

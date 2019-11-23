@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -127,10 +128,7 @@ public class GameActivity extends AppCompatActivity {
                     public void run() {
                         if (pitch.name != null) {
                             if (currentNote.equals(pitch.name) && !keyFound) {
-                                mCountDownTimer.cancel();
-                                successes++;
-                                keyFound = true;
-                                startNewNote();
+                                displayNoteFound(true);
                             }
                         }
                     }
@@ -160,6 +158,7 @@ public class GameActivity extends AppCompatActivity {
         }
         score = findViewById(R.id.score);
         note = findViewById(R.id.note);
+        note.setTypeface(Utils.getTypeface(this, Utils.FONTAWESOME));
         timeProgressBar = findViewById(R.id.timeBar);
         requestPermissions();
     }
@@ -194,6 +193,7 @@ public class GameActivity extends AppCompatActivity {
                 time = 2000;
                 break;
         }
+        note.setTextColor(getResources().getColor(R.color.colorInfo));
         if (notesCount < totalNotes) {
             keyFound = false;
             notesCount++;
@@ -214,7 +214,7 @@ public class GameActivity extends AppCompatActivity {
                 @Override
                 public void onFinish() {
                     timeProgressBar.setProgress(0);
-                    startNewNote();
+                    displayNoteFound(false);
                 }
             };
             mCountDownTimer.start();
@@ -243,6 +243,25 @@ public class GameActivity extends AppCompatActivity {
                 startNewNote();
             }
         }.start();
+    }
+
+    private void displayNoteFound(boolean success) {
+        timeProgressBar.setVisibility(View.INVISIBLE);
+        if (success) {
+            mCountDownTimer.cancel();
+            successes++;
+            keyFound = true;
+            note.setTextColor(getResources().getColor(R.color.colorSuccess));
+            note.setText(R.string.fa_check_circle);
+        } else {
+            note.setTextColor(getResources().getColor(R.color.colorDanger));
+            note.setText(R.string.fa_times_circle);
+        }
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                startNewNote();
+            }
+        }, 2000);
     }
 
 }

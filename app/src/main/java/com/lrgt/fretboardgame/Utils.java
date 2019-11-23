@@ -19,9 +19,9 @@ package com.lrgt.fretboardgame;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Build;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 /**
@@ -33,14 +33,21 @@ class Utils {
     static String easyLevelName = "easy";
     static String mediumLevelName = "medium";
     static String hardLevelName = "hard";
+    static final String ROOT = "fonts/";
+    static final String FONTAWESOME = ROOT + "fontawesome-webfont.ttf";
 
     static boolean checkPermission(Context context, String permission) {
         return ContextCompat.checkSelfPermission(context,
                 permission) == PackageManager.PERMISSION_GRANTED || Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     }
 
-    static SharedPreferences getPrefs(AppCompatActivity activity) {
+    static SharedPreferences getPrefs(Context context) {
         String PREFERENCES_NAME = "preferences";
-        return activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
+
+    public static Typeface getTypeface(Context context, String font) {
+        return Typeface.createFromAsset(context.getAssets(), font);
+    }
+
 }

@@ -189,11 +189,11 @@ public class GameActivity extends AppCompatActivity {
                 break;
             case 2:
                 levelName = Utils.mediumLevelName;
-                time = 5000;
+                time = 6000;
                 break;
             case 3:
                 levelName = Utils.hardLevelName;
-                time = 2000;
+                time = 3000;
                 break;
         }
         note.setTextColor(getResources().getColor(R.color.colorInfo));
@@ -231,6 +231,11 @@ public class GameActivity extends AppCompatActivity {
                 editor.putInt(levelName, successes);
                 editor.apply();
             }
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    onBackPressed();
+                }
+            }, 3000);
         }
     }
 

@@ -64,7 +64,7 @@
             android:text="@string/medium" />
 
         <TextView
-            android:id="@+id/mdm_score"
+            android:id="@+id/medium_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"

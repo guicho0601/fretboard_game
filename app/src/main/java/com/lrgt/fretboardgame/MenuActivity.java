@@ -3,21 +3,21 @@ package com.lrgt.fretboardgame;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private SharedPreferences prefs;
+    private String userNameString = "username";
 
     private TextView usernameTV;
 
@@ -39,12 +39,31 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        prefs = getSharedPreferences(Utils.PREFERENCES_NAME, Context.MODE_PRIVATE);
-        String userName = prefs.getString("user_name", "");
+        SharedPreferences prefs = Utils.getPrefs(this);
+        String userName = prefs.getString(userNameString, "");
+        int easyScore = prefs.getInt(Utils.easyLevelName, 0);
+        int mediumScore = prefs.getInt(Utils.mediumLevelName, 0);
+        int hardScore = prefs.getInt(Utils.hardLevelName, 0);
         if (userName.length() == 0) {
             createUserNameDialog().show();
         } else {
             usernameTV.setText(userName);
+        }
+        TextView scores;
+        if (easyScore > 0) {
+            scores = findViewById(R.id.easy_score);
+            scores.setVisibility(View.VISIBLE);
+            scores.setText(String.format(Locale.getDefault(), "%d/%d", easyScore, Utils.totalNotes));
+        }
+        if (mediumScore > 0) {
+            scores = findViewById(R.id.medium_score);
+            scores.setVisibility(View.VISIBLE);
+            scores.setText(String.format(Locale.getDefault(), "%d/%d", mediumScore, Utils.totalNotes));
+        }
+        if (hardScore > 0) {
+            scores = findViewById(R.id.hard_score);
+            scores.setVisibility(View.VISIBLE);
+            scores.setText(String.format(Locale.getDefault(), "%d/%d", hardScore, Utils.totalNotes));
         }
     }
 
@@ -77,15 +96,15 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         LayoutInflater inflater = getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_user_name, null);
         final EditText username = v.findViewById(R.id.username);
+        final SharedPreferences.Editor editor = Utils.getPrefs(this).edit();
         builder.setView(v)
                 .setPositiveButton(R.string.enter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         String un = username.getText().toString();
-                        if(!un.isEmpty()) {
+                        if (!un.isEmpty()) {
                             un = un.replace(" ", "_");
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("username", un);
+                            editor.putString(userNameString, un);
                             editor.apply();
                             dialog.cancel();
                             usernameTV.setText(un);
@@ -95,9 +114,11 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        createUserNameDialog().show();
                     }
                 });
 
         return builder.create();
     }
+
 }

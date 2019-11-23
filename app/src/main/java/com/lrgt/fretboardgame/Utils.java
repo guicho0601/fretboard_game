@@ -17,20 +17,30 @@
 package com.lrgt.fretboardgame;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 /**
  * Created by andry on 23/04/16.
  */
-public class Utils {
+class Utils {
 
-    static String PREFERENCES_NAME = "preferences";
+    static int totalNotes = 30;
+    static String easyLevelName = "easy";
+    static String mediumLevelName = "medium";
+    static String hardLevelName = "hard";
 
     static boolean checkPermission(Context context, String permission) {
         return ContextCompat.checkSelfPermission(context,
                 permission) == PackageManager.PERMISSION_GRANTED || Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
+    }
+
+    static SharedPreferences getPrefs(AppCompatActivity activity) {
+        String PREFERENCES_NAME = "preferences";
+        return activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 }

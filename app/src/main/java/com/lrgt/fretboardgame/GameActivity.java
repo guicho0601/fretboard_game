@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -16,9 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static com.lrgt.fretboardgame.Utils.totalNotes;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -34,9 +38,8 @@ public class GameActivity extends AppCompatActivity {
     private int level = 0;
     private int time = 10000;
     private int notesCount = 0;
-    private int points = 0;
+    private int successes = 0;
     private boolean keyFound = false;
-
 
     private TextView note;
     private TextView score;
@@ -125,7 +128,7 @@ public class GameActivity extends AppCompatActivity {
                         if (pitch.name != null) {
                             if (currentNote.equals(pitch.name) && !keyFound) {
                                 mCountDownTimer.cancel();
-                                points += 100;
+                                successes++;
                                 keyFound = true;
                                 startNewNote();
                             }
@@ -162,13 +165,13 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
     @SuppressLint("DefaultLocale")
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -177,23 +180,26 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void startNewNote() {
-        if (notesCount < 30) {
+        String levelName = Utils.easyLevelName;
+        switch (level) {
+            case 1:
+                time = 10000;
+                break;
+            case 2:
+                levelName = Utils.mediumLevelName;
+                time = 5000;
+                break;
+            case 3:
+                levelName = Utils.hardLevelName;
+                time = 2000;
+                break;
+        }
+        if (notesCount < totalNotes) {
             keyFound = false;
             notesCount++;
             currentNote = mNotes.notes.get(randomPosition());
             note.setText(String.format("%s", currentNote));
-            switch (level) {
-                case 1:
-                    time = 10000;
-                    break;
-                case 2:
-                    time = 5000;
-                    break;
-                case 3:
-                    time = 2000;
-                    break;
-            }
-            score.setText(String.format("%d", points));
+            score.setText(String.format(Locale.getDefault(), "%d/%d", successes, notesCount));
             int timeProgress = time / 1000;
             timeProgressBar.setVisibility(View.VISIBLE);
             timeProgressBar.setMax(timeProgress);
@@ -213,23 +219,23 @@ public class GameActivity extends AppCompatActivity {
             };
             mCountDownTimer.start();
         } else {
-            note.setText(String.format("%s: %d", getString(R.string.your_score), points));
+            note.setText(String.format(Locale.getDefault(), "%s: %d/%d", getString(R.string.your_score), successes, totalNotes));
             timeProgressBar.setVisibility(View.INVISIBLE);
             score.setText("");
+            SharedPreferences prefs = Utils.getPrefs(this);
+            if (prefs.getInt(levelName, 0) < successes) {
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt(levelName, successes);
+                editor.apply();
+            }
         }
     }
 
     private void startGame() {
-        new CountDownTimer(4000, 1000) {
+        new CountDownTimer(3000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                if ((int) millisUntilFinished == 0) {
-                    note.setText(getString(R.string.go));
-                } else if (millisUntilFinished == 4000) {
-                    note.setText(getString(R.string.ready));
-                } else {
-                    note.setText(String.format("%d", (millisUntilFinished / 1000)));
-                }
+                note.setText(String.format(Locale.getDefault(), "%d", ((millisUntilFinished / 1000) + 1)));
             }
 
             public void onFinish() {

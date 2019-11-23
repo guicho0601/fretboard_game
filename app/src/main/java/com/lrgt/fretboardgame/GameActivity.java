@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -64,6 +65,8 @@ public class GameActivity extends AppCompatActivity {
         if (mProcessing) {
             mAudioProcessor.stop();
             mProcessing = false;
+            mCountDownTimer.cancel();
+            notesCount = 100;
         }
     }
 
@@ -247,16 +250,20 @@ public class GameActivity extends AppCompatActivity {
 
     private void displayNoteFound(boolean success) {
         timeProgressBar.setVisibility(View.INVISIBLE);
+        MediaPlayer mediaPlayer;
         if (success) {
             mCountDownTimer.cancel();
             successes++;
             keyFound = true;
             note.setTextColor(getResources().getColor(R.color.colorSuccess));
             note.setText(R.string.fa_check_circle);
+            mediaPlayer = MediaPlayer.create(this, R.raw.success);
         } else {
             note.setTextColor(getResources().getColor(R.color.colorDanger));
             note.setText(R.string.fa_times_circle);
+            mediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
         }
+        mediaPlayer.start();
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 startNewNote();

@@ -13,6 +13,9 @@
     <string name="username">Username</string>
     <string name="enter">Enter</string>
     <string name="cancel">Cancel</string>
+    <string name="warning">Warning</string>
+    <string name="are_you_sure_to_exit">Are you sure that you want to leave the game?</string>
+    <string name="sure">Sure</string>
 
     <string name="standard_tuning_val" translatable="false">Standard</string>
     <string name="open_a_tuning_val" translatable="false">Open A</string>
@@ -24,4 +27,6 @@
 
     <string name="fa_times_circle">&#xf057;</string>
     <string name="fa_check_circle">&#xf058;</string>
+
+    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
 </resources>

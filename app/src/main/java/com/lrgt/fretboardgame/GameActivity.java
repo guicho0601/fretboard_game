@@ -49,7 +49,8 @@ public class GameActivity extends AppCompatActivity {
     private String currentNote;
 
     private boolean mProcessing = false;
-
+    private boolean mPlaying = true;
+    private boolean mFinished = false;
 
     @Override
     protected void onStart() {
@@ -65,8 +66,7 @@ public class GameActivity extends AppCompatActivity {
         if (mProcessing) {
             mAudioProcessor.stop();
             mProcessing = false;
-            mCountDownTimer.cancel();
-            notesCount = 100;
+            mPlaying = false;
         }
     }
 
@@ -177,6 +177,15 @@ public class GameActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mPlaying = false;
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+    }
+
     private int randomPosition() {
         return new Random().nextInt(12);
     }
@@ -197,7 +206,7 @@ public class GameActivity extends AppCompatActivity {
                 break;
         }
         note.setTextColor(getResources().getColor(R.color.colorInfo));
-        if (notesCount < totalNotes) {
+        if (notesCount < totalNotes && mPlaying) {
             keyFound = false;
             notesCount++;
             currentNote = mNotes.notes.get(randomPosition());
@@ -222,6 +231,7 @@ public class GameActivity extends AppCompatActivity {
             };
             mCountDownTimer.start();
         } else {
+            mFinished = true;
             note.setText(String.format(Locale.getDefault(), "%s: %d/%d", getString(R.string.your_score), successes, totalNotes));
             timeProgressBar.setVisibility(View.INVISIBLE);
             score.setText("");
@@ -231,11 +241,13 @@ public class GameActivity extends AppCompatActivity {
                 editor.putInt(levelName, successes);
                 editor.apply();
             }
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    onBackPressed();
-                }
-            }, 3000);
+            if (mPlaying) {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        onBackPressed();
+                    }
+                }, 3000);
+            }
         }
     }
 
@@ -254,6 +266,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void displayNoteFound(boolean success) {
+        mCountDownTimer = null;
         timeProgressBar.setVisibility(View.INVISIBLE);
         MediaPlayer mediaPlayer;
         if (success) {

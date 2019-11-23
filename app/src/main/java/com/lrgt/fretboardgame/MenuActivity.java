@@ -1,7 +1,5 @@
 package com.lrgt.fretboardgame;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,13 +11,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 import java.util.Locale;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String userNameString = "username";
 
+    private int selectedLevel = 0;
+
     private TextView usernameTV;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +45,19 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         easyBtn.setOnClickListener(this);
         mdmBtn.setOnClickListener(this);
         hardBtn.setOnClickListener(this);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = newInterstitialAd();
+        loadInterstitial();
     }
 
     @Override
@@ -69,26 +93,21 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        int level;
         switch (view.getId()) {
             case R.id.easy_btn:
-                level = 1;
+                selectedLevel = 1;
                 break;
             case R.id.mdm_btn:
-                level = 2;
+                selectedLevel = 2;
                 break;
             case R.id.hard_btn:
-                level = 3;
+                selectedLevel = 3;
                 break;
             default:
-                level = 0;
+                selectedLevel = 0;
                 break;
         }
-        if (level > 0) {
-            Intent i = new Intent(getBaseContext(), GameActivity.class);
-            i.putExtra("level", level);
-            startActivity(i);
-        }
+        showInterstitial();
     }
 
     public AlertDialog createUserNameDialog() {
@@ -119,6 +138,48 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 });
 
         return builder.create();
+    }
+
+    private InterstitialAd newInterstitialAd() {
+        InterstitialAd interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+
+            }
+
+            @Override
+            public void onAdClosed() {
+                goToGame();
+            }
+        });
+        return interstitialAd;
+    }
+
+    private void loadInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        mInterstitialAd.loadAd(adRequest);
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            goToGame();
+        }
+    }
+
+    private void goToGame() {
+        Intent i = new Intent(getBaseContext(), GameActivity.class);
+        i.putExtra("level", selectedLevel);
+        startActivity(i);
     }
 
 }

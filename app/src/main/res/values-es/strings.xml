@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="are_you_sure_to_exit">Estás seguro que quiere salir del juego?</string>
+    <string name="cancel">Cancelar</string>
+    <string name="choose">Escoge la dificultad</string>
+    <string name="easy">Fácil</string>
+    <string name="enter">Ingresar</string>
+    <string name="go">Vamos!</string>
+    <string name="hard">Díficil</string>
+    <string name="medium">Medio</string>
+    <string name="permission">Permisos</string>
+    <string name="permission_record_audio">El app debe de tener habilitado el uso del microfono.</string>
+    <string name="ready">Listo</string>
+    <string name="sure">Seguro</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="warning">Advertencia</string>
+    <string name="your_score">Tu punteo es</string>
+</resources>

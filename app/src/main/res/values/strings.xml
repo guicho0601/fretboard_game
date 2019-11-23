@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fretboard Game</string>
+    <string name="app_name" translatable="false">Fretboard Game</string>
     <string name="permission">Permission</string>
     <string name="permission_record_audio">The app must be able to use the microphone.</string>
     <string name="choose">Choose the difficulty</string>
@@ -25,8 +25,8 @@
 
     <string name="pref_tuning_key" translatable="false">pref_tuning</string>
 
-    <string name="fa_times_circle">&#xf057;</string>
-    <string name="fa_check_circle">&#xf058;</string>
+    <string name="fa_times_circle" translatable="false">&#xf057;</string>
+    <string name="fa_check_circle" translatable="false">&#xf058;</string>
 
-    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 </resources>
